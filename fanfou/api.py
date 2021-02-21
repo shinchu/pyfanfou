@@ -5,8 +5,8 @@
 
 import requests
 from requests_oauthlib import OAuth1
-from xauth import AuthClient
-import config
+from . import xauth
+from . import config
 import logging
 
 logging.basicConfig(level=logging.WARNING)
@@ -66,7 +66,7 @@ class ApiClient(object):
 
     def login(self, username, password):
         # try:
-        client = AuthClient(
+        client = xauth.AuthClient(
             self.consumer_key, self.consumer_secret, self.token_url)
         access_token = client.get_access_token(username, password)
         logger.info("登录成功，Token是", access_token['oauth_token'])
@@ -210,4 +210,4 @@ if __name__ == '__main__':
     client.verify_credentials()
     # client.get_home_timeline(count=1)
     # print client.get_user("wangxing", mode="default", format="html")
-    print client.get_user_photos("wangxing", count=1)
+    print(client.get_user_photos("wangxing", count=1))

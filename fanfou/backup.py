@@ -6,15 +6,15 @@ from __future__ import print_function
 import sys
 import os
 import argparse
-import utils
+from . import utils
 import time
-from api import ApiClient
-from api import ApiError
-from db import DB
+from .api import ApiClient
+from .api import ApiError
+from .db import DB
 import os
 import json
 import logging
-import renderer
+from . import renderer
 from requests import ConnectionError
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
@@ -99,7 +99,7 @@ class Backup(object):
             return
         try:
             self.target_user = self.api.get_user(self.target_id)
-        except ApiError, e:
+        except ApiError as e:
             if e.args[0] == 404:
                 print('你指定的用户{0}不存在'.format(self.target_id))
             self.target_user = None
@@ -275,7 +275,7 @@ class Backup(object):
                         self.target_id, count=DEFAULT_COUNT,
                         since_id=since_id)
                     break
-                except ConnectionError, e:
+                except ConnectionError as e:
                     error = e
                     print(e)
                     timeline = None
@@ -308,7 +308,7 @@ class Backup(object):
                     timeline = self.api.get_user_timeline(
                         self.target_id, count=DEFAULT_COUNT, max_id=max_id)
                     break
-                except ConnectionError, e:
+                except ConnectionError as e:
                     error = e
                     print(e)
                     timeline = None

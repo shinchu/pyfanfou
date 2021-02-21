@@ -4,9 +4,11 @@
 
 ### 安装和使用
 
+现在仅支持Python 3 (2021.02.21)
+
 #### Windows
 
-从[百度云](http://pan.baidu.com/s/1o6GcH9S#path=%252FPublic2)或[Github](https://github.com/mcxiaoke/pyfanfou/releases/latest)下载，解压运行 **pyfanfou.exe** 即可。
+从[Github](https://github.com/mcxiaoke/pyfanfou/releases/latest)下载，解压运行 **pyfanfou.exe** 即可。
 
 ### 所有系统
 

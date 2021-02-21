@@ -9,15 +9,13 @@ import os
 import imp
 import threading
 from datetime import datetime
-import Queue as queue
-from Tkinter import *
-from ttk import Separator
-from tkFileDialog import askdirectory
-from tkSimpleDialog import *
-from tkMessageBox import showerror, showinfo
-from ScrolledText import ScrolledText
-import const
-import backup
+import queue
+from tkinter import *
+from tkinter.ttk import *
+from tkinter.scrolledtext import ScrolledText
+from tkinter.filedialog import askdirectory
+from . import const
+from . import backup
 
 # http://pythonhosted.org/PyInstaller/
 
@@ -53,7 +51,7 @@ def redirectFunc(out, func, **kwargs):
 class BackupUI(Frame):
 
     def __init__(self, parent=None, **options):
-        Frame.__init__(self, parent, padx=10, pady=10)
+        Frame.__init__(self, parent)
 
         self.dataQueue = queue.Queue()
         self.thread = None
@@ -63,8 +61,8 @@ class BackupUI(Frame):
         self.photoVar.set(1)
 
         self.top = Frame(self)
-        self.top.pack(side=TOP, expand=YES, fill=X)
-        self.top.config(bd=2)
+        self.top.pack(side=TOP, expand=YES, fill=X, padx=10, pady=10)
+        self.top.config()
         self.createForm()
         self.createButtons()
         self.createText()
@@ -72,7 +70,7 @@ class BackupUI(Frame):
     def createButtons(self):
 
         frm = Frame(self.top)
-        frm.pack(side=RIGHT, expand=YES, anchor=NE)
+        frm.pack(side=RIGHT, expand=YES, anchor=NE, padx=10, pady=10)
         self.btnStart = Button(frm, text='开始备份', command=self.start)
         self.btnStart.pack(side=TOP)
         self.btnStop = Button(frm, text='停止备份', command=self.stop)
@@ -80,7 +78,7 @@ class BackupUI(Frame):
         self.btnStop.config(state=DISABLED)
 
         frm = Frame(self.top)
-        frm.pack(side=RIGHT, expand=YES, anchor=NE)
+        frm.pack(side=RIGHT, expand=YES, anchor=NE, padx=10, pady=10)
         self.userCheck = Checkbutton(frm, text='备份好友资料', variable=self.userVar)
         self.userCheck.config(command=self.callback)
         self.userCheck.pack(side=TOP)
@@ -89,8 +87,8 @@ class BackupUI(Frame):
         self.photoCheck.config(command=self.callback)
         self.photoCheck.pack(side=TOP)
 
-        frm = Frame(self, pady=5, padx=5)
-        frm.pack(side=TOP, anchor=W)
+        frm = Frame(self)
+        frm.pack(side=TOP, anchor=W, padx=10, pady=10)
         self.btnSelect = Button(frm, text='选择保存路径', command=self.selectPath)
         self.btnSelect.pack(side=LEFT)
         self.savePath = Entry(frm, width=45, textvariable=self.outputPath)
@@ -119,12 +117,12 @@ class BackupUI(Frame):
         winfont = ('simhei', 10, 'normal')
         font = ('Helvetica', 12, 'normal')
 
-        self.content = Frame(self, pady=5)
-        self.content.pack(side=LEFT, expand=YES, fill=BOTH)
+        self.content = Frame(self)
+        self.content.pack(side=LEFT, expand=YES, fill=BOTH, padx=10, pady=10)
         self.text = ScrolledText(self.content)
         self.text.pack(side=TOP, expand=YES, fill=BOTH)
         self.text.config(bg='light gray', fg='black')
-        self.text.config(padx=10, pady=10, font=winfont if isWin32 else font)
+        self.text.config(font=winfont if isWin32 else font)
         self.text.insert(END, const.USER_GUIDE)
         self.text.config(state=DISABLED)
 
@@ -142,7 +140,7 @@ class BackupUI(Frame):
         if message and message.strip():
             # timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            self.dataQueue.put(timestamp+" - "+message+'\n')
+            self.dataQueue.put(timestamp + " - " + message + '\n')
 
     def updateText(self, message):
         self.text.config(state=NORMAL)
@@ -171,7 +169,7 @@ class BackupUI(Frame):
         keys = ['username', 'password', 'target']
         values = map(lambda x: x.get(), self.inputs)
         if not any(values):
-            showerror(const.NO_INPUT_TITLE, const.NO_INPUT_MESSAGE)
+            messagebox.showerror(const.NO_INPUT_TITLE, const.NO_INPUT_MESSAGE)
             return
         options = dict(zip(keys, values))
         options['output'] = self.savePath.get()
@@ -199,7 +197,7 @@ class BackupThread(threading.Thread):
         if message and message.strip():
             # timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            self.dataQueue.put(timestamp+" - "+message+'\n')
+            self.dataQueue.put(timestamp + " - " + message + '\n')
 
     def stop(self):
         if getattr(self, 'backup'):
@@ -221,7 +219,7 @@ def center(root):
 
     x = (root.winfo_screenwidth() - root.winfo_reqwidth()) / 2
     y = (root.winfo_screenheight() - root.winfo_reqheight()) / 2
-    root.geometry("+%d+%d" % (x, y-50))
+    root.geometry("+%d+%d" % (x, y - 50))
 
     # This seems to draw the window frame immediately, so only call deiconify()
     # after setting correct window position
@@ -239,6 +237,7 @@ def start():
         '程序关闭') or ui.stop() or root.quit())
     center(root)
     root.mainloop()
+
 
 if __name__ == '__main__':
     start()

@@ -1,7 +1,7 @@
 # coding: utf8
 import oauth2
 import urllib
-import urlparse
+from urllib.parse import urlparse
 import logging
 
 logging.basicConfig(level=logging.WARNING)
@@ -53,7 +53,7 @@ def test_get_access_token():
     token_url = "http://fanfou.com/oauth/access_token"
     client = AuthClient(consumer_key, consumer_secret, token_url)
     access_token = client.get_access_token("test", "test")
-    print access_token
+    print(access_token)
 
 if __name__ == '__main__':
     test_get_access_token()

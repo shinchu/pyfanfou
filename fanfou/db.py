@@ -3,8 +3,8 @@
 # @Author: mcxiaoke
 # @Date:   2015-08-05 20:07:34
 
-import utils
-from basedb import BaseDB
+from . import utils
+from . import basedb
 
 KV_TABLE = "kv"
 LOG_TABLE = "log"
@@ -61,7 +61,7 @@ STATUS_TABLE_CREATE_SQL = (
 )
 
 
-class DB(BaseDB):
+class DB(basedb.BaseDB):
 
     def __init__(self, db_name):
         super(DB, self).__init__(db_name)
@@ -130,7 +130,7 @@ class DB(BaseDB):
                    " (id,screen_name,followers_count,followings_count,"
                    "statuses_count,created_at,added_at,data) "
                    " VALUES (?,?,?,?,?,?,?,?) "), *values)
-        print "insert_user: %d rows inserted to database" % c.rowcount
+        print("insert_user: %d rows inserted to database" % c.rowcount)
         self.conn.commit()
         return c
 
@@ -141,7 +141,7 @@ class DB(BaseDB):
                        " (id,screen_name,followers_count,followings_count,"
                        "statuses_count,created_at,added_at,data) "
                        " VALUES (?,?,?,?,?,?,?,?) "), values)
-        print "%d 条用户资料已存储到数据库" % c.rowcount
+        print("%d 条用户资料已存储到数据库" % c.rowcount)
         self.conn.commit()
         return c
 
@@ -152,7 +152,7 @@ class DB(BaseDB):
                    " (id,sid,uid,text,photo, created_at,added_at,data) "
                    " VALUES (?,?,?,?,?,?,?,?) "), *values)
         self.conn.commit()
-        print "insert_status: %d rows inserted to database" % c.rowcount
+        print("insert_status: %d rows inserted to database" % c.rowcount)
         return c
 
     def bulk_insert_status(self, status_list):
@@ -162,18 +162,18 @@ class DB(BaseDB):
                        " (id,sid,uid,text,photo, created_at,added_at,data) "
                        " VALUES (?,?,?,?,?,?,?,?) "), values)
         self.conn.commit()
-        print "%d 条消息已存储到数据库" % c.rowcount
+        print("%d 条消息已存储到数据库" % c.rowcount)
         return c
 
     def print_status(self):
         # print 'users count:', self.get_user_count()
         # print 'oldest user:', self.get_oldest_user()
         # print 'latest user:', self.get_latest_user()
-        print "====== database statictics start ======"
-        print 'status count:', self.get_status_count()
-        print 'oldest status:', self.get_oldest_status()
-        print 'latest status:', self.get_latest_status()
-        print "====== database statictics end ======"
+        print("====== database statictics start ======")
+        print('status count:', self.get_status_count())
+        print('oldest status:', self.get_oldest_status())
+        print('latest status:', self.get_latest_status())
+        print("====== database statictics end ======")
 
 
 if __name__ == '__main__':

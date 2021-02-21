@@ -9,10 +9,10 @@ import time
 import shutil
 import os
 import sys
-from cStringIO import StringIO
+import io
 from string import Template
-import template
-import utils
+from . import template
+from . import utils
 
 
 def _render_status_html(it, out, outDir):
@@ -40,7 +40,7 @@ def _render_html(data, outDir):
     first = data[0]
     user = first['user']
     title = u'{0}的消息'.format(user['screen_name'])
-    out = StringIO()
+    out = io.StringIO()
     out.write(Template(template.HEAD).substitute(title=title).encode('utf8'))
     out.write(Template(template.BODY_HEADER).substitute(
         title=title).encode('utf8'))
@@ -72,7 +72,7 @@ def _render_markdown(data):
     first = data[0]
     user = first['user']
     title = u'{0}的消息'.format(user['screen_name'])
-    out = StringIO()
+    out = io.StringIO()
     out.write(Template(template.MARKDOWN_HEADER).substitute(
         title=title).encode('utf8'))
     for it in data:
@@ -98,7 +98,7 @@ def _render_text(data):
     first = data[0]
     user = first['user']
     title = u'{0}的消息'.format(user['screen_name'])
-    out = StringIO()
+    out = io.StringIO()
     out.write(Template(template.TEXT_HEADER).substitute(
         title=title).encode('utf8'))
     for it in data:
