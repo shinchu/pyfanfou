@@ -20,7 +20,7 @@ def _render_status_html(it, out, outDir):
     name = it['user']['screen_name']
     uid = it['user']['id']
     raw_time = it['created_at']
-    time = utils.get_only_fanfou_date(raw_time).decode('utf8')
+    time = utils.get_only_fanfou_date(raw_time)
     text = it['text']
     if it.get('photo'):
         imgfile = os.path.join('{0}-photos'.format(uid), '{0}.jpg'.format(id))
@@ -33,7 +33,7 @@ def _render_status_html(it, out, outDir):
                             raw_time=raw_time, time=time,
                             text=text, photo_url=photo,
                             photo_link=u'照片' if photo else '')
-    out.write(status.encode('utf8'))
+    out.write(status)
 
 
 def _render_html(data, outDir):
@@ -41,9 +41,9 @@ def _render_html(data, outDir):
     user = first['user']
     title = u'{0}的消息'.format(user['screen_name'])
     out = io.StringIO()
-    out.write(Template(template.HEAD).substitute(title=title).encode('utf8'))
+    out.write(Template(template.HEAD).substitute(title=title))
     out.write(Template(template.BODY_HEADER).substitute(
-        title=title).encode('utf8'))
+        title=title))
     out.write(u'<div class="timeline">')
     for it in data:
         #print('render status ',it['id'])
@@ -59,13 +59,13 @@ def _render_status_makrdown(it, out):
     name = it['user']['screen_name']
     uid = it['user']['id']
     raw_time = it['created_at']
-    time = utils.normalize_fanfou_date(raw_time).decode('utf8')
+    time = utils.normalize_fanfou_date(raw_time)
     text = it['text']
     photo = u' [图片] ' if it.get('photo') else u''
     tpl = Template(template.MARKDOWN_STATUS)
     status = tpl.substitute(id=id, name=name, uid=uid,
                             time=time, text=text, photo=photo)
-    out.write(status.encode('utf8'))
+    out.write(status)
 
 
 def _render_markdown(data):
@@ -74,7 +74,7 @@ def _render_markdown(data):
     title = u'{0}的消息'.format(user['screen_name'])
     out = io.StringIO()
     out.write(Template(template.MARKDOWN_HEADER).substitute(
-        title=title).encode('utf8'))
+        title=title))
     for it in data:
         _render_status_makrdown(it, out)
 
@@ -87,11 +87,11 @@ def _render_status_text(it, out):
     name = it['user']['screen_name']
     uid = it['user']['id']
     raw_time = it['created_at']
-    time = utils.get_only_fanfou_date(raw_time).decode('utf8')
+    time = utils.get_only_fanfou_date(raw_time)
     text = it['text']
     tpl = Template(template.TEXT_STATUS)
     status = tpl.substitute(id=id, name=name, uid=uid, time=time, text=text)
-    out.write(status.encode('utf8'))
+    out.write(status)
 
 
 def _render_text(data):
@@ -100,7 +100,7 @@ def _render_text(data):
     title = u'{0}的消息'.format(user['screen_name'])
     out = io.StringIO()
     out.write(Template(template.TEXT_HEADER).substitute(
-        title=title).encode('utf8'))
+        title=title))
     for it in data:
         _render_status_text(it, out)
 
@@ -116,17 +116,17 @@ def render(data, fileOut):
     text = _render_text(data)
     # http://stackoverflow.com/questions/6048085/python-write-unicode-text-to-a-text-file
     # save  html
-    tempfile = os.path.join(unicode(time.time()))
+    tempfile = os.path.join(str(time.time()))
     with open(tempfile, 'w') as out:
         out.write(html)
     shutil.move(tempfile, fileOut+'.html')
     # save markdown
-    tempfile = os.path.join(unicode(time.time()))
+    tempfile = os.path.join(str(time.time()))
     with open(tempfile, 'w') as out:
         out.write(markdown)
     shutil.move(tempfile, fileOut+'.md')
     # save text
-    tempfile = os.path.join(unicode(time.time()))
+    tempfile = os.path.join(str(time.time()))
     with open(tempfile, 'w') as out:
         out.write(text)
     shutil.move(tempfile, fileOut+'.txt')

@@ -69,6 +69,7 @@ class ApiClient(object):
         client = xauth.AuthClient(
             self.consumer_key, self.consumer_secret, self.token_url)
         access_token = client.get_access_token(username, password)
+        access_token = {k.decode(): v.decode() for k, v in access_token.items()}
         logger.info("登录成功，Token是", access_token['oauth_token'])
         self._check_auth(access_token)
         # except AuthError, e:

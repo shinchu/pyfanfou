@@ -1,7 +1,7 @@
 # coding: utf8
 import oauth2
 import urllib
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl
 import logging
 
 logging.basicConfig(level=logging.WARNING)
@@ -35,7 +35,7 @@ class AuthClient(object):
         client.add_credentials(username, password)
         client.set_signature_method = oauth2.SignatureMethod_HMAC_SHA1()
         resp, body = client.request(
-            self.token_url, method='POST', body=urllib.urlencode({
+            self.token_url, method='POST', body=urllib.parse.urlencode({
                 'x_auth_mode': 'client_auth',
                 'x_auth_username': username,
                 'x_auth_password': password,
@@ -43,7 +43,7 @@ class AuthClient(object):
         if resp['status'] != '200':
             logger.error('登录失败，服务端返回数据：%s' % body)
             raise AuthError(resp['status'], '用户名或密码不正确')
-        self.token = dict(urlparse.parse_qsl(body))
+        self.token = dict(parse_qsl(body))
         return self.token
 
 
